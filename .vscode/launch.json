@@ -9,6 +9,16 @@
             "projectName": "backendNUBEPLAY",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-BackendNubeplayApplication<backend-NUBEPLAY-master>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.backendNUBEPLAY.BackendNubeplayApplication",
+            "projectName": "backend-NUBEPLAY-master",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
