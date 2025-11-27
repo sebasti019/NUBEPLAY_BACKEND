@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-BackendNubeplayApplication<backendNUBEPLAY>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.backendNUBEPLAY.BackendNubeplayApplication",
+            "projectName": "backendNUBEPLAY",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
