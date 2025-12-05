@@ -1,15 +1,12 @@
 package com.example.backendNUBEPLAY.controller;
 
-
 import java.util.stream.Collectors;
-import java.util.Optional;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.hateoas.*;
-
 
 import com.example.backendNUBEPLAY.model.Usuario;
 import com.example.backendNUBEPLAY.repository.UsuarioRepository;
@@ -29,7 +26,6 @@ public class UsuarioController {
         this.assembler = assembler;
     }
 
-
     @GetMapping("/api/v1/usuarios")
     public ResponseEntity<CollectionModel<EntityModel<Usuario>>> all() {
         List<EntityModel<Usuario>> usuarios = repository.findAll().stream()
@@ -42,7 +38,6 @@ public class UsuarioController {
         );
     }
 
-
     @PostMapping("/api/v1/usuarios")
     public ResponseEntity<?> newUsuario(@RequestBody Usuario nuevo) {
         EntityModel<Usuario> entityModel = assembler.toModel(repository.save(nuevo));
@@ -52,20 +47,18 @@ public class UsuarioController {
                 .body(entityModel);
     }
 
-
     @GetMapping("/api/v1/usuarios/{id}")
-    public ResponseEntity<EntityModel<Usuario>> getById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<Usuario>> getById(@PathVariable("id") Long id) {
         Usuario usuario = repository.findById(id)
                 .orElseThrow(() -> new UsuarioNotFoundException(id));
 
         return ResponseEntity.ok(assembler.toModel(usuario));
     }
 
-
     @PutMapping("/api/v1/usuarios/{id}")
     public ResponseEntity<EntityModel<Usuario>> replaceUsuario(
             @RequestBody Usuario nuevoUsuario,
-            @PathVariable Long id) {
+            @PathVariable("id") Long id) {
 
         Usuario usuario = repository.findById(id)
                 .map(u -> {
@@ -85,13 +78,11 @@ public class UsuarioController {
         return ResponseEntity.ok(entityModel);
     }
 
-
     @DeleteMapping("/api/v1/usuarios/{id}")
-    public ResponseEntity<?> deleteUsuario(@PathVariable Long id) {
+    public ResponseEntity<?> deleteUsuario(@PathVariable("id") Long id) {
         repository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
 
     @PostMapping("/api/v1/usuarios/login")
     public ResponseEntity<EntityModel<Usuario>> login(@RequestBody Map<String, String> data) {
