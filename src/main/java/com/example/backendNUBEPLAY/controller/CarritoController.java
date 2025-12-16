@@ -102,12 +102,13 @@ public class CarritoController {
         return ResponseEntity.noContent().build();
     }
 
+
     @DeleteMapping("/vaciar")
     public ResponseEntity<Map<String, String>> vaciarCarrito(@RequestBody Map<String, Long> data) {
         Long usuarioId = data.get("usuarioId");
 
         if (usuarioId == null) {
-            return ResponseEntity.badRequest().body(Map.of("mensaje", "UsuarioId requerido"));
+            return ResponseEntity.badRequest().body(Map.of("mensaje", "usuarioId requerido"));
         }
 
         repository.deleteByUsuarioId(usuarioId);
