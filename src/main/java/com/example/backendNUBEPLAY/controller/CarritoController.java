@@ -15,7 +15,7 @@ import com.example.backendNUBEPLAY.assembler.CarritoModelAssembler;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE })
 @RequestMapping("/api/v1/carrito")
 public class CarritoController {
 
@@ -26,7 +26,6 @@ public class CarritoController {
         this.repository = repository;
         this.assembler = assembler;
     }
-
 
     @GetMapping("/{usuarioId}")
     public ResponseEntity<CollectionModel<EntityModel<CarritoItem>>> getCarrito(@PathVariable("usuarioId") Long usuarioId) {
@@ -41,7 +40,6 @@ public class CarritoController {
         );
     }
 
-
     @GetMapping("/item/{id}")
     public ResponseEntity<EntityModel<CarritoItem>> getItemById(@PathVariable("id") Long id) {
         CarritoItem item = repository.findById(id)
@@ -49,7 +47,6 @@ public class CarritoController {
 
         return ResponseEntity.ok(assembler.toModel(item));
     }
-
 
     @PostMapping("/agregar")
     public ResponseEntity<?> agregar(@RequestBody Map<String, Object> data) {
@@ -84,7 +81,6 @@ public class CarritoController {
         return ResponseEntity.ok(assembler.toModel(item));
     }
 
-
     @PutMapping("/cantidad/{id}")
     public ResponseEntity<EntityModel<CarritoItem>> cambiarCantidad(
             @PathVariable("id") Long id,
@@ -102,21 +98,23 @@ public class CarritoController {
         return ResponseEntity.ok(assembler.toModel(item));
     }
 
-
     @DeleteMapping("/item/{id}")
     public ResponseEntity<?> eliminarItem(@PathVariable("id") Long id) {
         repository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/vaciar/{usuarioId}")
-    public ResponseEntity<Map<String, String>> vaciarCarrito(
-            @PathVariable("usuarioId") Long usuarioId) {
+
+    @DeleteMapping("/vaciar")
+    public ResponseEntity<Map<String, String>> vaciarCarrito(@RequestBody Map<String, Long> data) {
+        Long usuarioId = data.get("usuarioId");
+
+        if (usuarioId == null) {
+            return ResponseEntity.badRequest().body(Map.of("mensaje", "usuarioId es requerido"));
+        }
 
         repository.deleteByUsuarioId(usuarioId);
 
-        return ResponseEntity.ok(
-            Map.of("mensaje", "Carrito vaciado correctamente")
-        );
+        return ResponseEntity.ok(Map.of("mensaje", "Carrito vaciado correctamente"));
     }
 }
