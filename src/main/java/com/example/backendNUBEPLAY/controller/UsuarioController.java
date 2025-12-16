@@ -85,14 +85,18 @@ public class UsuarioController {
     }
 
     @PostMapping("/api/v1/usuarios/login")
-    public ResponseEntity<EntityModel<Usuario>> login(@RequestBody Map<String, String> data) {
+    public ResponseEntity<?> login(@RequestBody Map<String, String> data) {
 
-        String correo = data.get("correo");
-        String password = data.get("password");
+        String correo = data.get("correo").trim();
+        String password = data.get("password").trim();
 
         Usuario usuario = repository.findByCorreo(correo)
                 .filter(u -> u.getPassword().equals(password))
-                .orElseThrow(() -> new RuntimeException("credencial invalida"));
+                .orElse(null);
+
+        if (usuario == null) {
+            return ResponseEntity.status(401).body("Credenciales inválidas");
+        }
 
         return ResponseEntity.ok(assembler.toModel(usuario));
     }
