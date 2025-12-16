@@ -51,38 +51,38 @@ public class CarritoController {
     }
 
 
-@PostMapping("/agregar")
-public ResponseEntity<?> agregar(@RequestBody Map<String, Object> data) {
+    @PostMapping("/agregar")
+    public ResponseEntity<?> agregar(@RequestBody Map<String, Object> data) {
 
-    Long usuarioId = Long.valueOf(data.get("usuarioId").toString());
-    Long productoId = Long.valueOf(data.get("productoId").toString());
-    String nombre = data.get("nombre").toString();
-    String imagen = data.get("imagen").toString();
-    Integer precio = Integer.valueOf(data.get("precio").toString());
+        Long usuarioId = Long.valueOf(data.get("usuarioId").toString());
+        Long productoId = Long.valueOf(data.get("productoId").toString());
+        String nombre = data.get("nombre").toString();
+        String imagen = data.get("imagen").toString();
+        Integer precio = Integer.valueOf(data.get("precio").toString());
 
-    Integer cantidad = data.get("cantidad") != null
-            ? Integer.valueOf(data.get("cantidad").toString())
-            : 1;
+        Integer cantidad = data.get("cantidad") != null
+                ? Integer.valueOf(data.get("cantidad").toString())
+                : 1;
 
-    CarritoItem item = repository
-            .findByUsuarioIdAndProductoId(usuarioId, productoId)
-            .map(i -> {
-                i.setCantidad(i.getCantidad() + cantidad);
-                return repository.save(i);
-            })
-            .orElseGet(() -> {
-                CarritoItem nuevo = new CarritoItem();
-                nuevo.setUsuarioId(usuarioId);
-                nuevo.setProductoId(productoId);
-                nuevo.setNombreProducto(nombre);
-                nuevo.setImagenProducto(imagen);
-                nuevo.setPrecio(precio);
-                nuevo.setCantidad(cantidad);
-                return repository.save(nuevo);
-            });
+        CarritoItem item = repository
+                .findByUsuarioIdAndProductoId(usuarioId, productoId)
+                .map(i -> {
+                    i.setCantidad(i.getCantidad() + cantidad);
+                    return repository.save(i);
+                })
+                .orElseGet(() -> {
+                    CarritoItem nuevo = new CarritoItem();
+                    nuevo.setUsuarioId(usuarioId);
+                    nuevo.setProductoId(productoId);
+                    nuevo.setNombreProducto(nombre);
+                    nuevo.setImagenProducto(imagen);
+                    nuevo.setPrecio(precio);
+                    nuevo.setCantidad(cantidad);
+                    return repository.save(nuevo);
+                });
 
-    return ResponseEntity.ok(assembler.toModel(item));
-}
+        return ResponseEntity.ok(assembler.toModel(item));
+    }
 
 
     @PutMapping("/cantidad/{id}")
@@ -109,10 +109,14 @@ public ResponseEntity<?> agregar(@RequestBody Map<String, Object> data) {
         return ResponseEntity.noContent().build();
     }
 
-
     @DeleteMapping("/vaciar/{usuarioId}")
-    public ResponseEntity<?> vaciarCarrito(@PathVariable("usuarioId") Long usuarioId) {
+    public ResponseEntity<Map<String, String>> vaciarCarrito(
+            @PathVariable("usuarioId") Long usuarioId) {
+
         repository.deleteByUsuarioId(usuarioId);
-        return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(
+            Map.of("mensaje", "Carrito vaciado correctamente")
+        );
     }
 }
