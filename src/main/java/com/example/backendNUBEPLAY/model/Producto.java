@@ -20,5 +20,6 @@ public class Producto {
 
     private String categoria;
 
+    @Column(columnDefinition = "TEXT")
     private String imagen; 
 }
