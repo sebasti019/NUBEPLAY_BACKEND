@@ -15,7 +15,7 @@ import com.example.backendNUBEPLAY.assembler.CarritoModelAssembler;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE })
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1/carrito")
 public class CarritoController {
 
@@ -50,13 +50,11 @@ public class CarritoController {
 
     @PostMapping("/agregar")
     public ResponseEntity<?> agregar(@RequestBody Map<String, Object> data) {
-
         Long usuarioId = Long.valueOf(data.get("usuarioId").toString());
         Long productoId = Long.valueOf(data.get("productoId").toString());
         String nombre = data.get("nombre").toString();
         String imagen = data.get("imagen").toString();
         Integer precio = Integer.valueOf(data.get("precio").toString());
-
         Integer cantidad = data.get("cantidad") != null
                 ? Integer.valueOf(data.get("cantidad").toString())
                 : 1;
@@ -104,13 +102,12 @@ public class CarritoController {
         return ResponseEntity.noContent().build();
     }
 
-
     @DeleteMapping("/vaciar")
     public ResponseEntity<Map<String, String>> vaciarCarrito(@RequestBody Map<String, Long> data) {
         Long usuarioId = data.get("usuarioId");
 
         if (usuarioId == null) {
-            return ResponseEntity.badRequest().body(Map.of("mensaje", "usuarioId es requerido"));
+            return ResponseEntity.badRequest().body(Map.of("mensaje", "UsuarioId requerido"));
         }
 
         repository.deleteByUsuarioId(usuarioId);
